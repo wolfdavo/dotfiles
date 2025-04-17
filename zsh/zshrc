@@ -25,6 +25,30 @@ export PATH="$HOME/.local/bin:$PATH"
 
 alias DEV="cd ~/Documents/Dev"
 
+# Themes (onedark or nord)
+export TMUX_THEME="onedark"
+export NVIM_THEME="onedark"
+export STARSHIP_THEME="onedark"
+export WEZTERM_THEME="onedark"
+
+# Tmux
+# Always work in a tmux session if Tmux is installed
+if which tmux >/dev/null 2>&1; then
+  # Check if the current environment is suitable for tmux
+  if [[ -z "$TMUX" && \
+        $TERM != "screen-256color" && \
+        $TERM != "screen" && \
+        -z "$VSCODE_INJECTION" && \
+        -z "$INSIDE_EMACS" && \
+        -z "$EMACS" && \
+        -z "$VIM" && \
+        -z "$INTELLIJ_ENVIRONMENT_READER" ]]; then
+    # Try to attach to the default tmux session, or create a new one if it doesn't exist
+    tmux attach -t default >/dev/null 2>&1 || tmux new -s default
+    exit
+  fi
+fi
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME

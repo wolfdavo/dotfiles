@@ -1,12 +1,14 @@
--- Pull in the wezterm API
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 local config = require("config")
 require("events")
 
--- For example, changing the color scheme:
-config.color_scheme = 'One Dark (Gogh)'
-config.font = wezterm.font 'Dank Mono'
-config.font_size = 20
+-- Apply color scheme based on the WEZTERM_THEME environment variable
+local themes = {
+	onedark = "One Dark (Gogh)",
+	nord = "Nord (Gogh)",
+}
+local success, stdout, stderr = wezterm.run_child_process({ os.getenv("SHELL"), "-c", "printenv WEZTERM_THEME" })
+local selected_theme = stdout:gsub("%s+", "") -- Remove all whitespace characters including newline
+config.color_scheme = themes[selected_theme]
 
--- and finally, return the configuration to wezterm
 return config
