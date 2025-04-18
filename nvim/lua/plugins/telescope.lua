@@ -49,7 +49,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
         --
          defaults = {
            mappings = {
-             i = { 
+             i = {
                 ['<C-k>'] = require('telescope.actions').move_selection_previous,
                 ['<C-j>'] = require('telescope.actions').move_selection_next,
                 ['<C-l>'] = require('telescope.actions').select_default,

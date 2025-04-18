@@ -25,28 +25,12 @@ require('lazy').setup({
       })
     end
   },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      local lspconfig = require("lspconfig")
-        lspconfig.tsserver = nil  -- kill the deprecated alias
-        lspconfig.ts_ls.setup({})
-        lspconfig.lua_ls.setup({
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { "vim" },
-              },
-            },
-          },
-        })
-    end
-  },
   require 'plugins.colortheme',
   require 'plugins.neotree',
   require 'plugins.bufferline',
   require 'plugins.lualine',
   require 'plugins.treesitter',
-  require 'plugins.telescope'
+  require 'plugins.telescope',
+  require 'plugins.lsp',
 })
 
