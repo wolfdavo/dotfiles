@@ -39,9 +39,6 @@ if which tmux >/dev/null 2>&1; then
     exit
   fi
 fi
-#
-# Better ls
-alias ls="eza --all --icons=always"
 
 # Git stuff
 alias gs='git status'
@@ -147,10 +144,12 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-# plugins=(git)
+plugins=(git)
 
-# source $ZSH/oh-my-zsh.sh
+source $ZSH/oh-my-zsh.sh
 
+# Better ls
+alias ls="eza --all --icons=always"
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
