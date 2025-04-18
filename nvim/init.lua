@@ -1,7 +1,5 @@
 require 'core.options'
 require 'core.keymaps'
--- ~/.config/nvim/init.lua
--- Super minimal Lazy.nvim-based Neovim config
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -32,5 +30,6 @@ require('lazy').setup({
   require 'plugins.treesitter',
   require 'plugins.telescope',
   require 'plugins.lsp',
+  require 'plugins.autocompletion',
 })
 
