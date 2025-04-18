@@ -23,6 +23,8 @@ require('lazy').setup {
   require 'plugins.telescope',
   require 'plugins.lsp',
   require 'plugins.autocompletion',
-  require 'plugins.neoscroll',
   require 'plugins.autoformatting',
+  require 'plugins.gitsigns',
+  require 'plugins.alpha',
+  require 'plugins.misc',
 }
