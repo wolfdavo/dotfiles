@@ -53,27 +53,32 @@ ship() {
     return 1
   fi
 
-  # bail out on any error
-  set -e
+  # Stage everything
+  git add --all || { echo "git add failed"; return 1; }
 
-  git add --all
-  git commit -m "$*"
+  # Commit with your message
+  git commit -m "$*" || { echo "git commit failed"; return 1; }
 
-  # fetch explicitly, then rebase your current branch onto origin
-  git fetch
-  if ! git rebase origin/$(git rev-parse --abbrev-ref HEAD); then
+  # Fetch remote updates
+  git fetch || { echo "git fetch failed"; return 1; }
+
+  # Rebase onto the remote branch, catching conflicts
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  if ! git rebase origin/"$branch"; then
     echo
-    echo "⚠️  Rebase stopped due to conflicts."
-    echo "   1) Fix the conflicts in the files listed by 'git status'"
-    echo "   2) Run 'git rebase --continue' to finish the rebase"
-    echo "   — or —"
-    echo "   Run 'git rebase --abort' to go back to where you started"
+    echo "⚠️  Rebase halted due to conflicts."
+    echo "   • Fix the files listed by 'git status'"
+    echo "   • Run 'git rebase --continue' to finish"
+    echo "   • Or run 'git rebase --abort' to back out"
     return 1
   fi
 
-  git push
-}
+  # Push up
+  git push || { echo "git push failed"; return 1; }
 
+  # All done
+  return 0
+}
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
