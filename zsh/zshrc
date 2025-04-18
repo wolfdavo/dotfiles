@@ -39,6 +39,41 @@ if which tmux >/dev/null 2>&1; then
     exit
   fi
 fi
+#
+# Better ls
+alias ls="eza --all --icons=always"
+
+# Git stuff
+alias gs='git status'
+alias gf='git fetch'
+# Handy dandy ship function to quickly push to remote
+ship() {
+  if [[ $# -lt 1 ]]; then
+    echo "Usage: ship <commit message>"
+    return 1
+  fi
+
+  # bail out on any error
+  set -e
+
+  git add --all
+  git commit -m "$*"
+
+  # fetch explicitly, then rebase your current branch onto origin
+  git fetch
+  if ! git rebase origin/$(git rev-parse --abbrev-ref HEAD); then
+    echo
+    echo "⚠️  Rebase stopped due to conflicts."
+    echo "   1) Fix the conflicts in the files listed by 'git status'"
+    echo "   2) Run 'git rebase --continue' to finish the rebase"
+    echo "   — or —"
+    echo "   Run 'git rebase --abort' to go back to where you started"
+    return 1
+  fi
+
+  git push
+}
+
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
