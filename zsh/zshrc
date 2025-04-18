@@ -17,19 +17,10 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-# Adding wezterm to path
-export PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
-
 # Cove project launcher utility
 export PATH="$HOME/.local/bin:$PATH"
 
 alias DEV="cd ~/Documents/Dev"
-
-# Themes (onedark or nord)
-export TMUX_THEME="onedark"
-export NVIM_THEME="onedark"
-export STARSHIP_THEME="onedark"
-export WEZTERM_THEME="onedark"
 
 # Tmux
 # Always work in a tmux session if Tmux is installed
