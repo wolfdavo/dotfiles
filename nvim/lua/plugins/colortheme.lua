@@ -1,12 +1,25 @@
+-- return {
+--   "navarasu/onedark.nvim",
+--   name = "onedark",
+--   priority = 1000,
+--   config = function()
+--     require("onedark").setup {
+--       style = "darker"
+--     }
+--     require("onedark").load()
+--
+--   end
+-- }
+
 return {
-  "navarasu/onedark.nvim",
-  name = "onedark",
+  'scottmckendry/cyberdream.nvim',
+  lazy = false,
   priority = 1000,
   config = function()
-    require("onedark").setup {
-      style = "darker"
+    require('cyberdream').setup {
+      -- Enable transparent background
+      transparent = true,
     }
-    require("onedark").load()
-
-  end
+    require('cyberdream').load()
+  end,
 }
