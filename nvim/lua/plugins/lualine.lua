@@ -56,7 +56,7 @@ return {
     local filename = {
       'filename',
       file_status = true, -- displays file status (readonly status, modified status)
-      path = 0,           -- 0 = just filename, 1 = relative path, 2 = absolute path
+      path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
     }
 
     local hide_in_width = function()
@@ -84,7 +84,8 @@ return {
     require('lualine').setup {
       options = {
         icons_enabled = true,
-        theme = themes[env_var_nvim_theme], -- Set theme based on environment variable
+        -- theme = themes[env_var_nvim_theme], -- Set theme based on environment variable
+        theme = 'auto', -- This is an overide for the transparent theming im doing - should probably be moved to env variable
         -- Some useful glyphs:
         -- https://www.nerdfonts.com/cheat-sheet
         --        
