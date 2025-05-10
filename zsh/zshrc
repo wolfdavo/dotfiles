@@ -22,6 +22,11 @@ export PATH="$HOME/.local/bin:$PATH"
 
 alias DEV="cd ~/Documents/Dev"
 
+# load API keys and other secrets
+if [[ -r "$HOME/.zshsecret" ]]; then
+  source "$HOME/.zshsecret"
+fi
+
 # Tmux
 # Always work in a tmux session if Tmux is installed
 if which tmux >/dev/null 2>&1; then

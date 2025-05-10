@@ -1,8 +1,8 @@
 -- Core options
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.clipboard = "unnamedplus"
-vim.opt.mouse = "a"
+vim.opt.clipboard = 'unnamedplus'
+vim.opt.mouse = 'a'
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
@@ -12,7 +12,7 @@ vim.opt.linebreak = true
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.termguicolors = true
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = 'yes'
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true
@@ -25,3 +25,4 @@ vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.o.splitbelow = true -- force all horizontal splits to go below current window
 vim.o.splitright = true -- force all vertical splits to go to the right of current window
 vim.opt.runtimepath:remove '/usr/share/vim/vimfiles' -- separate vim plugins from neovim in case vim still in use
+vim.opt.laststatus = 3 -- views can only be fully collapsed with the global statusline
