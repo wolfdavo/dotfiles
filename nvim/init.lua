@@ -13,9 +13,21 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- pull from the environment your shell spawned Neovim with
+local key = os.getenv 'OPENAI_API_KEY' or vim.fn.getenv 'OPENAI_API_KEY'
+
+if not key or key == '' then
+  -- warn you early if you forgot to `export` it in zsh
+  vim.notify('⚠️  OPENAI_API_KEY is not set in your shell environment!', vim.log.levels.WARN)
+else
+  -- make sure any plugin or LSP that reads vim.env sees it
+  vim.env.OPENAI_API_KEY = key
+end
+
+-- vim.notify('OPENAI_API_KEY: ' .. tostring(vim.env.OPENAI_API_KEY), vim.log.levels.WARN)
+
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup {
-  require 'plugins.avante',
   require 'plugins.colortheme',
   require 'plugins.neotree',
   require 'plugins.bufferline',
@@ -28,4 +40,5 @@ require('lazy').setup {
   require 'plugins.gitsigns',
   require 'plugins.alpha',
   require 'plugins.misc',
+  require 'plugins.avante',
 }
