@@ -20,8 +20,6 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 # Cove project launcher utility
 export PATH="$HOME/.local/bin:$PATH"
 
-alias DEV="cd ~/Documents/Dev"
-
 # load API keys and other secrets
 if [[ -r "$HOME/.zshsecret" ]]; then
   source "$HOME/.zshsecret"
@@ -89,6 +87,8 @@ ship() {
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="agnoster"
 #ZSH_THEME="robbyrussell"
+
+DEFAULT_USER="davidwolfenden"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load

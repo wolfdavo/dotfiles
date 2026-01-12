@@ -26,7 +26,17 @@ install_homebrew() {
     fi
 }
 
+install_oh_my_zsh() {
+    info "Installing Oh My Zsh..."
+    if [ -d "$HOME/.oh-my-zsh" ]; then
+        warning "Oh My Zsh already installed"
+    else
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    fi
+}
+
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     install_xcode
     install_homebrew
+    install_oh_my_zsh
 fi

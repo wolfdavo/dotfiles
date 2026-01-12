@@ -1,8 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
-# Library for command-line editing
-brew "readline"
 # Cross-platform make
 brew "cmake"
 # Command-line fuzzy finder written in Go
@@ -17,22 +15,12 @@ brew "node"
 brew "pyenv"
 # File browser
 brew "ranger"
-# Search tool like grep and The Silver Searcher
-brew "ripgrep"
-# Powerful, clean, object-oriented scripting language
-brew "ruby"
 # Terminal multiplexer
 brew "tmux"
 # Plugin manager for tmux
 brew "tpm"
-# Access X11 clipboards from the command-line
-brew "xclip"
 # General-purpose lossless data-compression library
 brew "zlib"
-# Fish-like fast/unobtrusive autosuggestions for zsh
-brew "zsh-autosuggestions"
-# Fish shell like syntax highlighting for zsh
-brew "zsh-syntax-highlighting"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3", link: false
 # PDF rendering library (based on the xpdf-3.0 code base)
@@ -45,11 +33,7 @@ brew "lazygit"
 cask "appcleaner"
 # App to build and share containerized applications and microservices
 cask "docker"
-# Developer targeted fonts with a high number of glyphs
-cask "font-hack-nerd-font"
-# Developer targeted fonts with a high number of glyphs
-cask "font-jetbrains-mono-nerd-font"
-# Developer targeted fonts with a high number of glyphs
-cask "font-symbols-only-nerd-font"
-# GPU-accelerated cross-platform terminal emulator and multiplexer
-cask "wezterm"
+# NeoVim
+brew "neovim"
+# Ghostty is a modern, fast, and secure password manager
+cask "ghostty"
