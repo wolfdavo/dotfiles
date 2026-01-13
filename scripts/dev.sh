@@ -8,25 +8,6 @@
 #   dev2          - 2-pane layout: NeoVim | Claude Code
 #   dev2 --laptop - 2-window layout for smaller screens (or --lt)
 
-# Helper to center the frontmost Ghostty window
-_center_ghostty_window() {
-  sleep 0.5
-  osascript -e '
-    tell application "System Events"
-      set frontApp to first application process whose frontmost is true
-      if name of frontApp is "Ghostty" then
-        tell frontApp
-          set frontWindow to first window
-          set {w, h} to size of frontWindow
-          set screenWidth to (do shell script "system_profiler SPDisplaysDataType | grep Resolution | head -1 | awk '\''{print $2}'\''") as integer
-          set screenHeight to (do shell script "system_profiler SPDisplaysDataType | grep Resolution | head -1 | awk '\''{print $4}'\''") as integer
-          set position of frontWindow to {(screenWidth - w) / 2, (screenHeight - h) / 2}
-        end tell
-      end if
-    end tell
-  ' 2>/dev/null &
-}
-
 dev() {
   local session_name="$(basename "$(pwd)")"
   local working_dir="$(pwd)"
@@ -69,7 +50,6 @@ dev() {
     echo "Session '$session_name' already exists. Opening in new window..."
     ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
     disown
-    _center_ghostty_window
     return 0
   fi
 
@@ -125,7 +105,6 @@ dev() {
   # Open new Ghostty window attached to this session
   ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
   disown
-  _center_ghostty_window
 }
 
 # Variant: dev with only NeoVim and Claude (no extra terminal)
@@ -168,7 +147,6 @@ dev2() {
     echo "Session '$session_name' already exists. Opening in new window..."
     ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
     disown
-    _center_ghostty_window
     return 0
   fi
 
@@ -218,5 +196,4 @@ dev2() {
   # Open new Ghostty window attached to this session
   ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
   disown
-  _center_ghostty_window
 }
