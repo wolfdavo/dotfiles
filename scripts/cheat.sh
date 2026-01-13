@@ -80,6 +80,18 @@ ${cyan}LSP${reset}
 ${cyan}Visual Mode${reset}
   ${green}</>${reset}         Indent (stay in visual)  ${green}p${reset}           Paste (keep register)
 
+${cyan}Claude Code${reset} ${dim}(IDE integration)${reset}
+  ${green}<leader>cca${reset} Add file to context      ${green}<leader>ccs${reset} Send selection (visual)
+  ${green}<leader>ccd${reset} Accept diff              ${green}<leader>ccD${reset} Deny diff
+
+${blue}══════════════════════════════════════════════════════════════════════════════${reset}
+${yellow}  SHELL COMMANDS${reset}
+${blue}══════════════════════════════════════════════════════════════════════════════${reset}
+
+${cyan}Dev Environment${reset}
+  ${green}dev${reset}         Open NeoVim + Claude + Terminal (3 panes)
+  ${green}dev2${reset}        Open NeoVim + Claude (2 panes)
+
 ${blue}══════════════════════════════════════════════════════════════════════════════${reset}
 "
 }

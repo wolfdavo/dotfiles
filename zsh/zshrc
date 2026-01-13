@@ -192,3 +192,6 @@ export PATH="$HOME/.local/bin:$PATH"
 # Cheat sheet command (type 'cheat' to see tmux/neovim keybindings)
 DOTFILES_DIR="$(dirname "$(dirname "$(readlink -f ~/.zshrc)")")"
 [[ -f "$DOTFILES_DIR/scripts/cheat.sh" ]] && source "$DOTFILES_DIR/scripts/cheat.sh"
+
+# Dev environment launcher (type 'dev' to open NeoVim + Claude Code + terminal)
+[[ -f "$DOTFILES_DIR/scripts/dev.sh" ]] && source "$DOTFILES_DIR/scripts/dev.sh"

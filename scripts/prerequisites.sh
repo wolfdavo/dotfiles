@@ -35,8 +35,19 @@ install_oh_my_zsh() {
     fi
 }
 
+install_tpm() {
+    info "Installing Tmux Plugin Manager (TPM)..."
+    if [ -d "$HOME/.tmux/plugins/tpm" ]; then
+        warning "TPM already installed"
+    else
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+        success "TPM installed. Run 'prefix + I' in tmux to install plugins."
+    fi
+}
+
 if [ "$(basename "$0")" = "$(basename "${BASH_SOURCE[0]}")" ]; then
     install_xcode
     install_homebrew
     install_oh_my_zsh
+    install_tpm
 fi

@@ -27,4 +27,6 @@ require('lazy').setup {
   require 'plugins.gitsigns',
   require 'plugins.alpha',
   require 'plugins.misc',
+  require 'plugins.claudecode',
+  require 'plugins.vim-tmux-navigator',
 }

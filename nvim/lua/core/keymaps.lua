@@ -41,11 +41,7 @@ vim.keymap.set('n', '<leader>h', '<C-w>s', opts)      -- split window horizontal
 vim.keymap.set('n', '<leader>se', '<C-w>=', opts)     -- make split windows equal width & height
 vim.keymap.set('n', '<leader>xs', ':close<CR>', opts) -- close current split window
 
--- Navigate between splits
-vim.keymap.set('n', '<C-k>', ':wincmd k<CR>', opts)
-vim.keymap.set('n', '<C-j>', ':wincmd j<CR>', opts)
-vim.keymap.set('n', '<C-h>', ':wincmd h<CR>', opts)
-vim.keymap.set('n', '<C-l>', ':wincmd l<CR>', opts)
+-- Navigate between splits (handled by vim-tmux-navigator plugin for seamless tmux integration)
 
 -- Tabs
 vim.keymap.set('n', '<leader>to', ':tabnew<CR>', opts)   -- open new tab

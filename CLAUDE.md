@@ -42,6 +42,13 @@ brew bundle --file=homebrew/Brewfile
 - `nvim/init.lua` - Entry point, loads core modules and plugins
 - `nvim/lua/core/` - Base settings (options.lua, keymaps.lua)
 - `nvim/lua/plugins/` - Individual plugin configurations (one file per plugin)
+- **Important:** New plugin files must be explicitly added to `init.lua`'s `lazy.setup{}` block (e.g., `require 'plugins.newplugin'`)
+
+**Claude Code Integration:**
+- `nvim/lua/plugins/claudecode.lua` - Configures `claudecode.nvim` for IDE integration with Claude Code CLI
+- Uses WebSocket to communicate (works with external terminals like tmux)
+- Provider set to "none" since Claude runs in external tmux pane
+- Keymaps: `<leader>cc` prefix (add file, send selection, accept/deny diffs)
 
 ### Script Organization
 - `scripts/utils.sh` - Shared logging functions (info, success, error, warning)
@@ -51,3 +58,6 @@ brew bundle --file=homebrew/Brewfile
 
 ### Secrets
 - `zsh/zshsecret` is gitignored and sourced by zshrc for sensitive environment variables
+
+## User Environment Notes
+- Terminal always opens inside a tmux session by default. Scripts should assume `$TMUX` is set and use pane IDs (not positional numbers) when creating splits.

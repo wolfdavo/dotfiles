@@ -19,6 +19,7 @@ if [[ "$install_apps" == "y" ]]; then
     install_xcode
     install_homebrew
     install_oh_my_zsh
+    install_tpm
 
     printf "\n"
     info "===================="
