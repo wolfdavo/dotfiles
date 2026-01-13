@@ -188,3 +188,7 @@ if [ -f '/Users/davidwolfenden/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/davidwolfenden/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/davidwolfenden/google-cloud-sdk/completion.zsh.inc'; fi
 export PATH="$HOME/.local/bin:$PATH"
+
+# Cheat sheet command (type 'cheat' to see tmux/neovim keybindings)
+DOTFILES_DIR="$(dirname "$(dirname "$(readlink -f ~/.zshrc)")")"
+[[ -f "$DOTFILES_DIR/scripts/cheat.sh" ]] && source "$DOTFILES_DIR/scripts/cheat.sh"
