@@ -96,8 +96,11 @@ dev() {
   else
     # DESKTOP MODE: Use panes in a single window
 
-    # Create new tmux session in background
-    tmux new-session -d -s "$session_name" -c "$working_dir" -x 200 -y 50
+    # Create new tmux session in background with a fixed window name
+    tmux new-session -d -s "$session_name" -c "$working_dir" -x 200 -y 50 -n "Build Cool Shit"
+
+    # Prevent automatic window renaming
+    tmux set-option -t "$session_name" allow-rename off
 
     # Start nvim in the first pane
     tmux send-keys -t "$session_name" "nvim ." Enter
@@ -189,8 +192,11 @@ dev2() {
   else
     # DESKTOP MODE: Use panes in a single window
 
-    # Create new tmux session in background
-    tmux new-session -d -s "$session_name" -c "$working_dir" -x 200 -y 50
+    # Create new tmux session in background with a fixed window name
+    tmux new-session -d -s "$session_name" -c "$working_dir" -x 200 -y 50 -n "Build Cool Shit"
+
+    # Prevent automatic window renaming
+    tmux set-option -t "$session_name" allow-rename off
 
     # Start nvim in the first pane
     tmux send-keys -t "$session_name" "nvim ." Enter
