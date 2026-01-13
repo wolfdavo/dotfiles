@@ -1,12 +1,49 @@
 #!/bin/bash
 
 # Dev environment launcher
-# Opens a 3-pane tmux layout: NeoVim (left) | Claude Code (middle) | Terminal (right)
-# The claudecode.nvim plugin starts a WebSocket server that Claude Code CLI auto-connects to
+# Opens a new Ghostty window with a tmux layout for development
+# Usage:
+#   dev           - 3-pane layout: NeoVim | Claude Code | Terminal
+#   dev --laptop  - 3-window layout for smaller screens (or --lt)
+#   dev2          - 2-pane layout: NeoVim | Claude Code
+#   dev2 --laptop - 2-window layout for smaller screens (or --lt)
+
+# Helper to center the frontmost Ghostty window
+_center_ghostty_window() {
+  sleep 0.5
+  osascript -e '
+    tell application "System Events"
+      set frontApp to first application process whose frontmost is true
+      if name of frontApp is "Ghostty" then
+        tell frontApp
+          set frontWindow to first window
+          set {w, h} to size of frontWindow
+          set screenWidth to (do shell script "system_profiler SPDisplaysDataType | grep Resolution | head -1 | awk '\''{print $2}'\''") as integer
+          set screenHeight to (do shell script "system_profiler SPDisplaysDataType | grep Resolution | head -1 | awk '\''{print $4}'\''") as integer
+          set position of frontWindow to {(screenWidth - w) / 2, (screenHeight - h) / 2}
+        end tell
+      end if
+    end tell
+  ' 2>/dev/null &
+}
 
 dev() {
-  local session_name="dev-$(basename "$(pwd)")"
+  local session_name="$(basename "$(pwd)")"
   local working_dir="$(pwd)"
+  local laptop_mode=false
+  local window_width=320
+  local window_height=75
+
+  # Parse flags
+  for arg in "$@"; do
+    case $arg in
+      --laptop|--lt)
+        laptop_mode=true
+        window_width=180
+        window_height=45
+        ;;
+    esac
+  done
 
   # Check if tmux is available
   if ! command -v tmux &> /dev/null; then
@@ -14,61 +51,63 @@ dev() {
     return 1
   fi
 
-  # Check if claude is available
-  if ! command -v claude &> /dev/null; then
-    echo "Warning: claude command not found. Middle pane will open a shell instead."
-    local claude_cmd="zsh"
-  else
-    local claude_cmd="claude"
+  # Check if ghostty is available
+  if ! command -v ghostty &> /dev/null; then
+    echo "Error: ghostty is not installed"
+    return 1
   fi
 
-  # If already in a tmux session, create panes in current window
-  if [[ -n "$TMUX" ]]; then
-    # Capture the current pane ID (this will be our nvim pane)
-    local nvim_pane="$(tmux display-message -p '#{pane_id}')"
+  # Check if claude is available
+  local claude_cmd="claude"
+  if ! command -v claude &> /dev/null; then
+    echo "Warning: claude command not found. Claude pane/window will open a shell instead."
+    claude_cmd="zsh"
+  fi
 
-    # Create right pane (will be terminal) and capture its ID
-    local terminal_pane="$(tmux split-window -h -c "$working_dir" -P -F '#{pane_id}')"
+  # Check if session already exists
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    echo "Session '$session_name' already exists. Opening in new window..."
+    ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
+    disown
+    _center_ghostty_window
+    return 0
+  fi
 
-    # Go back to nvim pane and split to create middle pane (Claude Code)
-    tmux select-pane -t "$nvim_pane"
-    local claude_pane="$(tmux split-window -h -c "$working_dir" -P -F '#{pane_id}')"
+  if [[ "$laptop_mode" == true ]]; then
+    # LAPTOP MODE: Use separate windows instead of panes
 
-    # Make all panes equal width
-    tmux select-layout even-horizontal
-
-    # Start nvim in leftmost pane
-    tmux send-keys -t "$nvim_pane" "nvim ." Enter
+    # Create new tmux session with first window for nvim
+    tmux new-session -d -s "$session_name" -c "$working_dir" -n "nvim"
+    tmux send-keys -t "$session_name:nvim" "nvim ." Enter
 
     # Give NeoVim a moment to start the WebSocket server
     sleep 1
 
-    # Start claude in middle pane
-    # Claude Code will auto-detect NeoVim via the lock file at ~/.claude/ide/
-    tmux send-keys -t "$claude_pane" "$claude_cmd" Enter
+    # Create second window for Claude Code
+    tmux new-window -t "$session_name" -c "$working_dir" -n "claude"
+    tmux send-keys -t "$session_name:claude" "$claude_cmd" Enter
 
-    # Right pane is already a terminal, just clear it
-    tmux send-keys -t "$terminal_pane" "clear" Enter
+    # Create third window for terminal
+    tmux new-window -t "$session_name" -c "$working_dir" -n "term"
 
-    # Focus on the nvim pane
-    tmux select-pane -t "$nvim_pane"
+    # Select the nvim window
+    tmux select-window -t "$session_name:nvim"
+
   else
-    # Not in tmux, create a new session
-    # Check if session already exists
-    if tmux has-session -t "$session_name" 2>/dev/null; then
-      echo "Session '$session_name' already exists. Attaching..."
-      tmux attach-session -t "$session_name"
-      return 0
-    fi
+    # DESKTOP MODE: Use panes in a single window
 
-    # Create new session with nvim in the first pane
-    tmux new-session -d -s "$session_name" -c "$working_dir" "nvim ."
+    # Create new tmux session in background
+    tmux new-session -d -s "$session_name" -c "$working_dir" -x 200 -y 50
+
+    # Start nvim in the first pane
+    tmux send-keys -t "$session_name" "nvim ." Enter
 
     # Give NeoVim a moment to start the WebSocket server
     sleep 1
 
     # Create middle pane with Claude Code
-    tmux split-window -h -t "$session_name" -c "$working_dir" "$claude_cmd"
+    tmux split-window -h -t "$session_name" -c "$working_dir"
+    tmux send-keys -t "$session_name" "$claude_cmd" Enter
 
     # Create right pane with terminal
     tmux split-window -h -t "$session_name" -c "$working_dir"
@@ -76,48 +115,102 @@ dev() {
     # Make all panes equal width
     tmux select-layout -t "$session_name" even-horizontal
 
-    # Focus on nvim pane
+    # Focus on nvim pane (first pane)
     tmux select-pane -t "$session_name:0.0"
-
-    # Attach to the session
-    tmux attach-session -t "$session_name"
   fi
+
+  # Open new Ghostty window attached to this session
+  ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
+  disown
+  _center_ghostty_window
 }
 
 # Variant: dev with only NeoVim and Claude (no extra terminal)
 dev2() {
-  local session_name="dev2-$(basename "$(pwd)")"
+  local session_name="$(basename "$(pwd)")"
   local working_dir="$(pwd)"
+  local laptop_mode=false
+  local window_width=320
+  local window_height=75
+
+  # Parse flags
+  for arg in "$@"; do
+    case $arg in
+      --laptop|--lt)
+        laptop_mode=true
+        window_width=180
+        window_height=45
+        ;;
+    esac
+  done
 
   if ! command -v tmux &> /dev/null; then
     echo "Error: tmux is not installed"
     return 1
   fi
 
+  if ! command -v ghostty &> /dev/null; then
+    echo "Error: ghostty is not installed"
+    return 1
+  fi
+
   local claude_cmd="claude"
   if ! command -v claude &> /dev/null; then
-    echo "Warning: claude command not found. Right pane will open a shell instead."
+    echo "Warning: claude command not found. Claude pane/window will open a shell instead."
     claude_cmd="zsh"
   fi
 
-  if [[ -n "$TMUX" ]]; then
-    local nvim_pane="$(tmux display-message -p '#{pane_id}')"
-    local claude_pane="$(tmux split-window -h -c "$working_dir" -P -F '#{pane_id}')"
-    tmux select-layout even-horizontal
-    tmux send-keys -t "$nvim_pane" "nvim ." Enter
-    sleep 1
-    tmux send-keys -t "$claude_pane" "$claude_cmd" Enter
-    tmux select-pane -t "$nvim_pane"
-  else
-    if tmux has-session -t "$session_name" 2>/dev/null; then
-      tmux attach-session -t "$session_name"
-      return 0
-    fi
-    tmux new-session -d -s "$session_name" -c "$working_dir" "nvim ."
-    sleep 1
-    tmux split-window -h -t "$session_name" -c "$working_dir" "$claude_cmd"
-    tmux select-layout -t "$session_name" even-horizontal
-    tmux select-pane -t "$session_name:0.0"
-    tmux attach-session -t "$session_name"
+  # Check if session already exists
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    echo "Session '$session_name' already exists. Opening in new window..."
+    ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
+    disown
+    _center_ghostty_window
+    return 0
   fi
+
+  if [[ "$laptop_mode" == true ]]; then
+    # LAPTOP MODE: Use separate windows instead of panes
+
+    # Create new tmux session with first window for nvim
+    tmux new-session -d -s "$session_name" -c "$working_dir" -n "nvim"
+    tmux send-keys -t "$session_name:nvim" "nvim ." Enter
+
+    # Give NeoVim a moment to start the WebSocket server
+    sleep 1
+
+    # Create second window for Claude Code
+    tmux new-window -t "$session_name" -c "$working_dir" -n "claude"
+    tmux send-keys -t "$session_name:claude" "$claude_cmd" Enter
+
+    # Select the nvim window
+    tmux select-window -t "$session_name:nvim"
+
+  else
+    # DESKTOP MODE: Use panes in a single window
+
+    # Create new tmux session in background
+    tmux new-session -d -s "$session_name" -c "$working_dir" -x 200 -y 50
+
+    # Start nvim in the first pane
+    tmux send-keys -t "$session_name" "nvim ." Enter
+
+    # Give NeoVim a moment to start the WebSocket server
+    sleep 1
+
+    # Create right pane with Claude Code
+    tmux split-window -h -t "$session_name" -c "$working_dir"
+    tmux send-keys -t "$session_name" "$claude_cmd" Enter
+
+    # Make panes equal width
+    tmux select-layout -t "$session_name" even-horizontal
+
+    # Focus on nvim pane
+    tmux select-pane -t "$session_name:0.0"
+  fi
+
+  # Open new Ghostty window attached to this session
+  ghostty --window-width=$window_width --window-height=$window_height -e tmux attach-session -t "$session_name" &
+  disown
+  _center_ghostty_window
 }
