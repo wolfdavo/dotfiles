@@ -29,10 +29,13 @@ fi
 # Always work in a tmux session if Tmux is installed
 if which tmux >/dev/null 2>&1; then
   # Check if the current environment is suitable for tmux
-  if [[ -z "$TMUX" && \
+  # $- == *i* ensures we only run in interactive shells (fixes Cursor/VSCode env resolution)
+  if [[ $- == *i* && \
+        -z "$TMUX" && \
         $TERM != "screen-256color" && \
         $TERM != "screen" && \
         -z "$VSCODE_INJECTION" && \
+        -z "$CURSOR_TRACE_ID" && \
         -z "$INSIDE_EMACS" && \
         -z "$EMACS" && \
         -z "$VIM" && \
@@ -190,7 +193,8 @@ if [ -f '/Users/davidwolfenden/google-cloud-sdk/completion.zsh.inc' ]; then . '/
 export PATH="$HOME/.local/bin:$PATH"
 
 # Cheat sheet command (type 'cheat' to see tmux/neovim keybindings)
-DOTFILES_DIR="$(dirname "$(dirname "$(readlink -f ~/.zshrc)")")"
+# Use macOS-compatible readlink (without -f flag which requires GNU coreutils)
+DOTFILES_DIR="$(cd "$(dirname "$(readlink ~/.zshrc || echo ~/.zshrc)")" && cd .. && pwd)"
 [[ -f "$DOTFILES_DIR/scripts/cheat.sh" ]] && source "$DOTFILES_DIR/scripts/cheat.sh"
 
 # Dev environment launcher (type 'dev' to open NeoVim + Claude Code + terminal)
