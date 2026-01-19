@@ -29,4 +29,5 @@ require('lazy').setup {
   require 'plugins.misc',
   require 'plugins.claudecode',
   require 'plugins.vim-tmux-navigator',
+  require 'plugins.slashmd',
 }

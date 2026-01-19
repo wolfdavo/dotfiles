@@ -199,3 +199,7 @@ DOTFILES_DIR="$(cd "$(dirname "$(readlink ~/.zshrc || echo ~/.zshrc)")" && cd ..
 
 # Dev environment launcher (type 'dev' to open NeoVim + Claude Code + terminal)
 [[ -f "$DOTFILES_DIR/scripts/dev.sh" ]] && source "$DOTFILES_DIR/scripts/dev.sh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

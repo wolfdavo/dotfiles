@@ -68,6 +68,7 @@ return {
   },
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
+    enabled = false, -- Disabled: incompatible with new nvim-treesitter API (no configs module)
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
