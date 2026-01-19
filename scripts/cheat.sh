@@ -84,6 +84,16 @@ ${cyan}Claude Code${reset} ${dim}(IDE integration)${reset}
   ${green}<leader>cca${reset} Add file to context      ${green}<leader>ccs${reset} Send selection (visual)
   ${green}<leader>ccd${reset} Accept diff              ${green}<leader>ccD${reset} Deny diff
 
+${cyan}SlashMD${reset} ${dim}(Markdown editing - active in .md files)${reset}
+  ${green}<leader>sm${reset}  Toggle render view       ${green}]b / [b${reset}    Next/prev block
+  ${green}<Tab>${reset}       Toggle fold/checkbox     ${green}<leader>bt${reset}  Transform block type
+  ${green}<leader>bd${reset}  Delete block             ${green}<leader>bk/bj${reset} Move block up/down
+  ${green}<leader>bh${reset}  Insert heading           ${green}<leader>bc${reset}  Insert code block
+  ${green}<leader>bl${reset}  Insert bullet list       ${green}<leader>bn${reset}  Insert callout
+  ${green}<leader>mb${reset}  Toggle bold              ${green}<leader>mi${reset}  Toggle italic
+  ${green}<leader>mc${reset}  Toggle inline code       ${green}<leader>ml${reset}  Insert link
+  ${dim}Insert mode:${reset} ${green}/${reset} slash menu (line start)  ${green}<Tab>/<S-Tab>${reset} indent/outdent list
+
 ${blue}══════════════════════════════════════════════════════════════════════════════${reset}
 ${yellow}  SHELL COMMANDS${reset}
 ${blue}══════════════════════════════════════════════════════════════════════════════${reset}
